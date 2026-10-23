@@ -1,0 +1,747 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>シャッフルクラスのすすめ</title>
+<meta name="description" content="シャッフルクラスに参加したメンバーの、参加前と参加中の行動量・継続・スタンプの変化">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231b2d5b'/%3E%3Ccircle cx='11' cy='13' r='4' fill='%236aaef0'/%3E%3Ccircle cx='21' cy='13' r='4' fill='%23f5c542'/%3E%3Cpath d='M5 26c1-5 4-7 6-7s5 2 6 7zM15 26c1-5 4-7 6-7s5 2 6 7z' fill='%23ffffff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap">
+<style>
+/* 色は「抹茶事業ダッシュボード」と同じ紺・空色・金。参加前＝グレー、参加中＝空色で通す */
+:root {
+  --bg: #f3f6fa; --surface: #ffffff; --ink: #14203a; --muted: #5a6a84; --line: #dbe3ee;
+  --navy: #1b2d5b; --sky: #2f7fc6; --sky-soft: #e4effa; --gold: #d99a00; --gold-soft: #fff2c9;
+  --matcha: #4b7a2a; --matcha-soft: #e5efd9;
+  --pre: #a7b2c4; --pre-band: #f0f2f6; --dur-band: #eaf3fc;
+  --cal0: #e7ecf3; --cal1: #c9def4; --cal2: #82b4e6; --cal3: #2f7fc6;
+  --hero-bg1: #1b2d5b; --hero-bg2: #2a4a8c; --hero-ink: #ffffff; --hero-muted: #c3d1ee; --hero-line: rgba(255,255,255,.18); --hero-gold: #f5c542; --hero-chip: rgba(255,255,255,.08);
+  --font-jp: "Zen Kaku Gothic New", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+  --font-num: "Barlow", "Zen Kaku Gothic New", "Helvetica Neue", Arial, sans-serif;
+  --radius: 16px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1424; --surface: #141e33; --ink: #e6ecf6; --muted: #9cafca; --line: #25334d;
+    --navy: #a9c2f2; --sky: #6aaef0; --sky-soft: #172b46; --gold: #f2c14e; --gold-soft: #3a2f12;
+    --matcha: #9cc872; --matcha-soft: #1d2e1c;
+    --pre: #5f6d86; --pre-band: #172034; --dur-band: #15263f;
+    --cal0: #1c2740; --cal1: #1f3d63; --cal2: #2f6aa6; --cal3: #6aaef0;
+    --hero-bg1: #172a52; --hero-bg2: #213f78; --hero-muted: #a9bde3; --hero-line: rgba(255,255,255,.14); --hero-chip: rgba(255,255,255,.06);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1424; --surface: #141e33; --ink: #e6ecf6; --muted: #9cafca; --line: #25334d;
+  --navy: #a9c2f2; --sky: #6aaef0; --sky-soft: #172b46; --gold: #f2c14e; --gold-soft: #3a2f12;
+  --matcha: #9cc872; --matcha-soft: #1d2e1c;
+  --pre: #5f6d86; --pre-band: #172034; --dur-band: #15263f;
+  --cal0: #1c2740; --cal1: #1f3d63; --cal2: #2f6aa6; --cal3: #6aaef0;
+  --hero-bg1: #172a52; --hero-bg2: #213f78; --hero-muted: #a9bde3; --hero-line: rgba(255,255,255,.14); --hero-chip: rgba(255,255,255,.06);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-jp); font-size: 15px; line-height: 1.7; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 20px 16px 64px; }
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+p { margin: 0; }
+.num { font-family: var(--font-num); }
+:focus-visible { outline: 3px solid var(--sky); outline-offset: 2px; }
+
+/* ---------- KV ---------- */
+.kv { position: relative; overflow: hidden; border-radius: 22px; color: var(--hero-ink); padding: 34px 32px;
+  background: radial-gradient(110% 80% at 88% 8%, rgba(245,197,66,.20), transparent 55%), radial-gradient(70% 60% at 0% 100%, rgba(106,174,240,.28), transparent 60%), linear-gradient(155deg, var(--hero-bg1), var(--hero-bg2));
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 28px 34px; align-items: center; }
+@media (max-width: 860px) { .kv { grid-template-columns: minmax(0, 1fr); padding: 26px 18px 22px; } }
+.kv-deco { position: absolute; inset: 0; pointer-events: none; }
+.kv-deco i { position: absolute; border-radius: 50%; background: rgba(255,255,255,.07); }
+.kv-deco .s { position: absolute; width: 14px; height: 14px; background: var(--hero-gold); clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); opacity: .85; }
+@media (prefers-reduced-motion: no-preference) { .kv-deco .s { animation: twinkle 2.8s ease-in-out infinite; } }
+@keyframes twinkle { 0%, 100% { transform: scale(.6); opacity: .35; } 50% { transform: scale(1.1); opacity: .95; } }
+.kv-copy { position: relative; display: grid; gap: 16px; min-width: 0; }
+.eyebrow { font: 700 12.5px var(--font-num); letter-spacing: .26em; color: var(--hero-gold); }
+.kv h1 { font-weight: 900; font-size: clamp(30px, 5.4vw, 50px); line-height: 1.2; letter-spacing: .01em; }
+.kv h1 span { display: inline-block; }
+.kv h1 em { font-style: normal; color: var(--hero-gold); }
+.kv h1 small { display: block; margin-top: 10px; font-size: clamp(17px, 2.4vw, 22px); font-weight: 700; color: var(--hero-ink); letter-spacing: .02em; }
+.kv-lead { color: var(--hero-muted); font-size: 14.5px; max-width: 40ch; }
+.kv-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; max-width: 460px; }
+.kv-stat { padding: 10px 12px; border-radius: 14px; background: var(--hero-chip); border: 1px solid var(--hero-line); min-width: 0; }
+.kv-stat .k { font-size: 12px; font-weight: 700; color: var(--hero-muted); white-space: nowrap; }
+.kv-stat .v { font: 700 30px/1.05 var(--font-num); color: var(--hero-gold); white-space: nowrap; }
+.kv-stat .v span { font: 700 13px var(--font-jp); margin-left: 2px; color: var(--hero-ink); }
+@media (max-width: 420px) { .kv-stat { padding: 8px 9px; } .kv-stat .k { font-size: 11px; letter-spacing: -.02em; } .kv-stat .v { font-size: 26px; } }
+.kv-art { position: relative; min-width: 0; }
+.kv-art svg { display: block; width: 100%; height: auto; filter: drop-shadow(0 18px 30px rgba(0,0,0,.28)); }
+.floaters { position: absolute; inset: 0; pointer-events: none; overflow: hidden; border-radius: 18px; }
+.floaters span { position: absolute; bottom: 12%; font-size: 22px; line-height: 1; will-change: transform, opacity; animation: floatUp var(--t, 3s) ease-out forwards; }
+@keyframes floatUp { 0% { transform: translate(0, 0) scale(.4); opacity: 0; } 12% { transform: translate(0, -14px) scale(1.1); opacity: 1; } 100% { transform: translate(var(--dx, 0px), -190px) scale(.9); opacity: 0; } }
+@media (max-width: 520px) { .floaters span { font-size: 17px; } }
+/* イラストの動き */
+@media (prefers-reduced-motion: no-preference) {
+  .bob { animation: bob 3.2s ease-in-out infinite; transform-box: fill-box; }
+  .wave { animation: wave 1.6s ease-in-out infinite; transform-box: view-box; }
+  .steam path { animation: steam 2.4s ease-in-out infinite; }
+  .bub { animation: bub 9s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 100%; }
+  .blink { animation: blink 4.6s infinite; transform-box: fill-box; transform-origin: 50% 50%; }
+}
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2.5px); } }
+@keyframes wave { 0%, 100% { transform: rotate(-8deg); } 50% { transform: rotate(10deg); } }
+@keyframes steam { 0% { opacity: 0; transform: translateY(3px); } 40% { opacity: .9; } 100% { opacity: 0; transform: translateY(-6px); } }
+@keyframes bub { 0%, 4% { transform: scale(0); opacity: 0; } 9%, 30% { transform: scale(1); opacity: 1; } 35%, 100% { transform: scale(0); opacity: 0; } }
+@keyframes blink { 0%, 94%, 100% { transform: scaleY(1); } 96% { transform: scaleY(.1); } }
+.tile-ring { fill: none; stroke: var(--hero-gold); stroke-width: 3; opacity: 0; transition: opacity .4s; }
+.tile-ring.on { opacity: 1; }
+
+/* ---------- 見出し・カード ---------- */
+section { margin-top: 44px; }
+.sec-head { display: grid; gap: 6px; margin-bottom: 18px; }
+.kicker { font: 700 12px var(--font-num); letter-spacing: .22em; color: var(--sky); }
+.sec-head h2 { font-size: clamp(22px, 3.4vw, 30px); font-weight: 900; color: var(--navy); line-height: 1.35; }
+.sec-head h2 .mark { background: linear-gradient(transparent 62%, var(--gold-soft) 62%); }
+.sec-head p { color: var(--muted); font-size: 14px; max-width: 64ch; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; min-width: 0; }
+
+/* ---------- 1. 参加前→参加中 ---------- */
+.ba { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 960px) { .ba { grid-template-columns: minmax(0, 1fr); } }
+.ba .card { display: grid; gap: 14px; align-content: start; }
+.ba-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.tag { display: inline-block; font-size: 12px; font-weight: 900; letter-spacing: .06em; color: var(--sky); background: var(--sky-soft); border-radius: 999px; padding: 2px 10px; }
+.ba h3 { margin-top: 6px; font-size: 17px; font-weight: 900; color: var(--navy); line-height: 1.45; }
+.times { flex: none; display: grid; place-items: center; width: 74px; height: 74px; border-radius: 50%; background: var(--gold-soft); color: var(--ink); box-shadow: inset 0 0 0 2px var(--gold); text-align: center; line-height: 1; }
+.times b { font: 700 27px var(--font-num); }
+.times small { display: block; font-size: 11px; font-weight: 700; color: var(--muted); margin-top: 2px; }
+.row { display: grid; gap: 6px; }
+.row-h { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.row-h .lab { font-size: 13px; font-weight: 700; color: var(--muted); }
+.row-h .val { font: 700 22px/1.1 var(--font-num); color: var(--muted); white-space: nowrap; }
+.row-h .val span { font: 700 13px var(--font-jp); margin-left: 2px; }
+.row.dur .row-h .lab { color: var(--ink); }
+.row.dur .row-h .val { color: var(--ink); font-size: 30px; }
+.dots { display: grid; grid-template-columns: repeat(11, minmax(0, 1fr)); gap: 4px; }
+.dots i { aspect-ratio: 1; border-radius: 5px; background: var(--cal0); transition: background-color .3s, transform .3s; }
+.dots i.on { background: var(--pre); }
+.row.dur .dots i.on { background: var(--sky); }
+.bar { height: 14px; border-radius: 0 7px 7px 0; background: var(--pre); width: 0; transition: width 1s cubic-bezier(.2,.8,.2,1); }
+.row.dur .bar { background: var(--sky); height: 18px; border-radius: 0 9px 9px 0; }
+.track { background: var(--cal0); border-radius: 0 9px 9px 0; }
+/* 強調の箱（継続率の「増えた人の割合」・飛び交ったスタンプ） */
+.hl { position: relative; overflow: hidden; border-radius: 14px; padding: 14px 16px 16px; background: var(--gold-soft); box-shadow: inset 0 0 0 1.5px var(--gold); display: grid; gap: 10px; }
+.hl p { position: relative; display: grid; justify-items: start; gap: 2px; }
+.hl .hl-s { font-weight: 900; font-size: 15.5px; line-height: 1.45; color: var(--ink); }
+.hl .hl-n { display: flex; align-items: baseline; gap: 3px; line-height: 1; }
+.hl .hl-n b { font: 700 64px/1 var(--font-num); color: var(--ink); letter-spacing: -.01em; }
+.hl .hl-n small { font-weight: 900; font-size: 24px; }
+.hl.stamp { background: var(--sky-soft); box-shadow: inset 0 0 0 1.5px var(--sky); min-height: 150px; align-content: center; }
+.hl .rain { position: absolute; inset: 0; pointer-events: none; }
+.hl .rain span { position: absolute; top: -26px; font-size: 18px; animation: fall var(--t, 2.6s) ease-in forwards; }
+.meter { height: 10px; border-radius: 999px; background: color-mix(in srgb, var(--gold) 22%, transparent); overflow: hidden; }
+.meter i { display: block; height: 100%; width: 0; border-radius: 999px; background: var(--gold); transition: width 1.2s cubic-bezier(.2,.8,.2,1) .2s; }
+.pops { display: flex; gap: 6px; }
+.pops span { flex: 1 1 0; min-width: 0; max-width: 46px; display: inline-grid; place-items: center; height: 32px; border-radius: 999px; background: var(--bg); border: 1px solid var(--line); font-size: 18px; transform: scale(0); transition: transform .4s cubic-bezier(.2,.9,.3,1.6); }
+.pops.on span { transform: none; }
+.ba-foot { border-top: 1px dashed var(--line); padding-top: 12px; font-size: 13.5px; display: grid; gap: 4px; }
+.ba-foot b { font-family: var(--font-num); font-size: 17px; color: var(--navy); }
+.ba-note { font-size: 12.5px; color: var(--muted); }
+
+/* ---------- 2. 週ごとの推移 ---------- */
+.charts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 860px) { .charts { grid-template-columns: minmax(0, 1fr); } }
+.chart h3 { font-size: 16px; font-weight: 900; color: var(--navy); }
+.chart .sub { font-size: 12.5px; color: var(--muted); }
+.plot { position: relative; margin-top: 10px; }
+.plot svg { display: block; width: 100%; overflow: visible; }
+.plot .grid { stroke: var(--line); stroke-width: 1; }
+.plot .ax { fill: var(--muted); font: 600 11.5px var(--font-num); }
+.plot .axj { fill: var(--muted); font: 700 11.5px var(--font-jp); }
+.plot .band-pre { fill: var(--pre-band); }
+.plot .band-dur { fill: var(--dur-band); }
+.plot .band-lab { font: 900 12px var(--font-jp); fill: var(--muted); }
+.plot .band-lab.dur { fill: var(--sky); }
+.plot .ln { fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.plot .ln.pre { stroke: var(--pre); }
+.plot .ln.dur { stroke: var(--sky); }
+.plot .pt { stroke: var(--surface); stroke-width: 2; }
+.plot .pt.pre { fill: var(--pre); }
+.plot .pt.dur { fill: var(--sky); }
+.plot .startline { stroke: var(--gold); stroke-width: 2; stroke-dasharray: 4 4; }
+.plot .startlab rect { fill: var(--gold); }
+.plot .startlab text { fill: #1b2d5b; font: 900 11.5px var(--font-jp); }
+.plot .endlab { fill: var(--ink); font: 700 14px var(--font-num); paint-order: stroke; stroke: var(--surface); stroke-width: 4px; stroke-linejoin: round; }
+.plot .cross { stroke: var(--muted); stroke-width: 1; opacity: 0; }
+.plot .hit { fill: transparent; cursor: crosshair; touch-action: pan-y; }
+.tip { position: absolute; z-index: 5; pointer-events: none; min-width: 120px; padding: 7px 10px; border-radius: 10px; background: var(--surface); color: var(--ink); border: 1px solid var(--line); box-shadow: 0 8px 22px rgba(10,20,40,.16); font-size: 12.5px; line-height: 1.55; transform: translate(-50%, calc(-100% - 12px)); white-space: nowrap; opacity: 0; transition: opacity .12s; }
+.tip.show { opacity: 1; }
+.tip b { font-family: var(--font-num); font-size: 15px; }
+.chart-say { margin-top: 10px; font-size: 13.5px; }
+.chart-say b { color: var(--sky); font-family: var(--font-num); font-size: 15px; }
+details.tbl { margin-top: 14px; }
+details summary { cursor: pointer; font-weight: 700; color: var(--navy); font-size: 13.5px; }
+.tbl-wrap { overflow-x: auto; margin-top: 8px; }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { padding: 6px 10px; border-bottom: 1px solid var(--line); text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+th:first-child, td:first-child { text-align: left; }
+thead th { color: var(--muted); font-weight: 700; background: var(--bg); }
+
+/* ---------- 3. クラスごとのスタンプ ---------- */
+.stamp-hero { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; padding: 18px 22px; border-radius: var(--radius); background: var(--gold-soft); box-shadow: inset 0 0 0 1px var(--gold); margin-bottom: 18px; position: relative; overflow: hidden; }
+.stamp-hero .big { display: flex; align-items: baseline; gap: 6px; }
+.stamp-hero .big b { font: 700 clamp(48px, 9vw, 72px)/1 var(--font-num); color: var(--ink); }
+.stamp-hero .big span { font-weight: 900; font-size: 18px; }
+.stamp-hero p { font-size: 14px; max-width: 44ch; }
+.stamp-hero .rain { position: absolute; inset: 0; pointer-events: none; }
+.stamp-hero .rain span { position: absolute; top: -30px; font-size: 20px; animation: fall var(--t, 2.6s) ease-in forwards; }
+@keyframes fall { 0% { transform: translateY(0) rotate(0); opacity: 0; } 10% { opacity: 1; } 100% { transform: translateY(170px) rotate(var(--r, 30deg)); opacity: 0; } }
+.term { display: flex; align-items: center; gap: 10px; margin: 22px 0 12px; font-weight: 900; color: var(--navy); font-size: 16px; }
+.term::after { content: ""; flex: 1; height: 2px; background: var(--line); }
+.term .live { font: 700 11.5px var(--font-jp); color: var(--matcha); background: var(--matcha-soft); border-radius: 999px; padding: 2px 10px; display: inline-flex; align-items: center; gap: 6px; }
+.term .live::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--matcha); }
+@media (prefers-reduced-motion: no-preference) { .term .live::before { animation: pulse 1.6s ease-in-out infinite; } }
+@keyframes pulse { 50% { opacity: .3; } }
+.cls-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; }
+.cls { display: grid; gap: 12px; align-content: start; }
+.cls-h { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.cls-h h3 { font-size: 17px; font-weight: 900; color: var(--navy); }
+.cls-h .period { font-size: 12px; color: var(--muted); font-weight: 700; }
+.cls-big { display: flex; align-items: baseline; gap: 4px; }
+.cls-big b { font: 700 44px/1 var(--font-num); color: var(--ink); }
+.cls-big span { font-weight: 900; font-size: 14px; }
+.tops { display: flex; flex-wrap: wrap; gap: 5px; }
+.tops span { display: inline-flex; align-items: center; justify-content: center; min-width: 38px; height: 30px; padding: 0 8px; border-radius: 999px; background: var(--bg); border: 1px solid var(--line); font-size: 17px; }
+.tops img { width: 20px; height: 20px; object-fit: contain; }
+.stack { display: flex; gap: 2px; height: 12px; }
+.stack i { display: block; height: 100%; }
+.stack i:first-child { background: var(--sky); border-radius: 6px 0 0 6px; }
+.stack i:last-child { background: var(--gold); border-radius: 0 6px 6px 0; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12.5px; color: var(--muted); }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+.legend b { color: var(--ink); font-family: var(--font-num); }
+.cal-lab { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 12.5px; font-weight: 700; color: var(--muted); }
+.cal { display: grid; grid-auto-flow: column; grid-template-rows: repeat(5, 1fr); gap: 3px; justify-content: start; }
+.cal i { width: 13px; height: 13px; border-radius: 3px; background: var(--cal0); }
+.cal i.l1 { background: var(--cal1); } .cal i.l2 { background: var(--cal2); } .cal i.l3 { background: var(--cal3); }
+.cal i.none { background: transparent; }
+.scale { display: inline-flex; align-items: center; gap: 3px; font-weight: 500; }
+.scale i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+.cls-foot { font-size: 12.5px; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 10px; }
+.cls-foot b { color: var(--ink); font-family: var(--font-num); font-size: 14px; }
+
+/* ---------- 4. こんなところ ---------- */
+.about { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; align-items: start; }
+@media (max-width: 860px) { .about { grid-template-columns: minmax(0, 1fr); } }
+.feats { display: grid; gap: 10px; counter-reset: f; }
+.feat { display: grid; grid-template-columns: 46px minmax(0, 1fr); gap: 12px; align-items: start; }
+.feat .ic { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; background: var(--sky-soft); font-size: 22px; }
+.feat:nth-child(2) .ic { background: var(--gold-soft); }
+.feat:nth-child(3) .ic { background: var(--matcha-soft); }
+.feat h3 { font-size: 15.5px; font-weight: 900; color: var(--navy); }
+.feat p { font-size: 13.5px; color: var(--ink); }
+.dc { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+.dc-top { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--line); font-weight: 900; font-size: 14px; }
+.dc-top .hash { color: var(--muted); font: 700 18px var(--font-num); }
+.dc-top small { margin-left: auto; font-size: 11.5px; color: var(--muted); font-weight: 700; }
+.dc-body { padding: 8px 6px 12px; display: grid; gap: 2px; }
+.msg { display: grid; grid-template-columns: 38px minmax(0, 1fr); gap: 10px; padding: 6px 8px; border-radius: 8px; opacity: 0; transform: translateY(8px); transition: opacity .4s, transform .4s; }
+.msg.on { opacity: 1; transform: none; }
+.msg:hover { background: var(--bg); }
+.msg .av { width: 38px; height: 38px; border-radius: 50%; overflow: hidden; }
+.msg .av svg { width: 100%; height: 100%; display: block; }
+.msg .who { font-weight: 900; font-size: 13.5px; }
+.msg .who small { font-weight: 500; color: var(--muted); font-size: 11px; margin-left: 6px; font-family: var(--font-num); }
+.msg .who .lead { font-size: 10.5px; font-weight: 900; color: #1b2d5b; background: var(--hero-gold); border-radius: 4px; padding: 0 5px; margin-left: 4px; }
+.msg .txt { font-size: 13.5px; }
+.rx { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.rx span { display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border-radius: 8px; background: var(--bg); border: 1px solid var(--line); font: 600 12.5px var(--font-num); transform: scale(0); transition: transform .35s cubic-bezier(.2,.9,.3,1.6); }
+.rx span.me { background: var(--sky-soft); border-color: var(--sky); }
+.msg.on .rx span { transform: none; }
+.dc-note { font-size: 11.5px; color: var(--muted); padding: 0 14px 12px; }
+
+/* ---------- 5. CTA・注記 ---------- */
+.cta { margin-top: 48px; border-radius: 22px; padding: 30px 26px; color: var(--hero-ink); text-align: center; display: grid; gap: 12px; justify-items: center;
+  background: radial-gradient(80% 90% at 50% 0%, rgba(245,197,66,.22), transparent 60%), linear-gradient(155deg, var(--hero-bg1), var(--hero-bg2)); }
+.cta h2 { font-size: clamp(22px, 3.6vw, 32px); font-weight: 900; line-height: 1.4; }
+.cta h2 em { font-style: normal; color: var(--hero-gold); }
+.cta p { color: var(--hero-muted); max-width: 46ch; font-size: 14.5px; }
+.cta .go { margin-top: 6px; display: inline-flex; align-items: center; gap: 8px; padding: 10px 22px; border-radius: 999px; background: var(--hero-gold); color: #1b2d5b; font-weight: 900; font-size: 16px; }
+.notes { margin-top: 26px; font-size: 13px; color: var(--muted); }
+.notes ul { margin: 8px 0 0; padding-left: 1.2em; display: grid; gap: 4px; max-width: 80ch; }
+.foot { margin-top: 22px; font-size: 12px; color: var(--muted); text-align: center; }
+
+/* 画面に入ったら動く */
+.rise { opacity: 0; transform: translateY(14px); transition: opacity .6s ease, transform .6s ease; }
+.rise.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .rise { opacity: 1; transform: none; transition: none; }
+  .msg { opacity: 1; transform: none; }
+  .rx span, .pops span { transform: none; transition: none; }
+  .bar, .meter i { transition: none; }
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<header class="kv">
+  <div class="kv-deco" aria-hidden="true">
+    <i style="width:260px;height:260px;left:-90px;top:-110px"></i>
+    <i style="width:140px;height:140px;right:38%;bottom:-70px"></i>
+    <i style="width:70px;height:70px;right:6%;top:12%"></i>
+    <span class="s" style="left:46%;top:14%;animation-delay:.2s"></span>
+    <span class="s" style="left:6%;bottom:16%;animation-delay:1.1s;width:10px;height:10px"></span>
+    <span class="s" style="right:4%;bottom:10%;animation-delay:1.8s"></span>
+    <span class="s" style="left:40%;bottom:8%;animation-delay:.7s;width:9px;height:9px"></span>
+  </div>
+  <div class="kv-copy">
+    <div class="eyebrow">SHUFFLE CLASS</div>
+    <h1><span>ひとりより、</span><span><em>みんなで。</em></span><small>仲間がいると、こんなに動ける。</small></h1>
+    <p class="kv-lead">シャッフルクラスに参加したメンバーのDiscordの記録から、参加する前と参加中をくらべてみました。</p>
+    <div class="kv-stats">
+      <div class="kv-stat"><div class="k">平日に動けた日</div><div class="v"><b class="num" data-count="" data-key="x_days" data-dec="1">–</b><span>倍</span></div></div>
+      <div class="kv-stat"><div class="k">DMの数</div><div class="v"><b class="num" data-count="" data-key="x_dm" data-dec="1">–</b><span>倍</span></div></div>
+      <div class="kv-stat"><div class="k">スタンプ</div><div class="v"><b class="num" data-count="" data-key="stamps_total">–</b><span>個</span></div></div>
+    </div>
+  </div>
+  <div class="kv-art">
+    <div id="zoom"></div>
+    <div class="floaters" id="floaters" aria-hidden="true"></div>
+  </div>
+</header>
+
+<section id="ba" aria-labelledby="ba-h">
+  <div class="sec-head rise">
+    <div class="kicker">BEFORE → AFTER</div>
+    <h2 id="ba-h">数字で見ると、<span class="mark">こう変わった</span></h2>
+    <p>参加した人の平均です。参加前＝クラスに入る前の30日、参加中＝クラスにいた期間でくらべています。</p>
+  </div>
+  <div class="ba">
+    <article class="card rise" id="c-days">
+      <div class="ba-top">
+        <div><span class="tag">継続率</span><h3>平日に動けた日<br><small style="font-size:13px;color:var(--muted);font-weight:700">（1か月あたり）</small></h3></div>
+        <div class="times"><div><b data-key="x_days" data-count="" data-dec="1">–</b><small>倍</small></div></div>
+      </div>
+      <div class="hl">
+        <p><span class="hl-s">参加した人の</span><span class="hl-n"><b data-key="up_share" data-count="">–</b><small>%</small></span><span class="hl-s">が、動ける日が増えました</span></p>
+        <div class="meter" role="img" aria-label="参加した人の76%"><i data-meter="up_share"></i></div>
+      </div>
+      <div class="row pre"><div class="row-h"><span class="lab">参加前</span><span class="val"><b data-key="days_pre" data-count="" data-dec="1">–</b><span>日</span></span></div><div class="dots" data-dots="days_pre"></div></div>
+      <div class="row dur"><div class="row-h"><span class="lab">参加中</span><span class="val"><b data-key="days_dur" data-count="" data-dec="1">–</b><span>日</span></span></div><div class="dots" data-dots="days_dur"></div></div>
+      <p class="ba-note">マス1つ＝平日1日（1か月の平日は約22日）。Discordに投稿できた平日を「動けた日」と数えています。</p>
+    </article>
+    <article class="card rise" id="c-dm">
+      <div class="ba-top">
+        <div><span class="tag">行動量</span><h3>DMの数<br><small style="font-size:13px;color:var(--muted);font-weight:700">（1人・1週間あたり）</small></h3></div>
+        <div class="times"><div><b data-key="x_dm" data-count="" data-dec="1">–</b><small>倍</small></div></div>
+      </div>
+      <div class="row pre"><div class="row-h"><span class="lab">参加前</span><span class="val"><b data-key="dm_pre" data-count="" data-dec="1">–</b><span>件</span></span></div><div class="track"><div class="bar" data-bar="dm_pre"></div></div></div>
+      <div class="row dur"><div class="row-h"><span class="lab">参加中</span><span class="val"><b data-key="dm_dur" data-count="" data-dec="1">–</b><span>件</span></span></div><div class="track"><div class="bar" data-bar="dm_dur"></div></div></div>
+      <p class="ba-note">全体共有リストに記録されたDMの数です。</p>
+      <div class="ba-foot"><span>参加した人の <b data-key="dm_up_share" data-count="" data-pct="">–</b>% が、DMが増えました</span><span>参加中に送ったDMは、みんなで合計 <b data-key="dm_total" data-count="">–</b>件</span></div>
+    </article>
+    <article class="card rise" id="c-rx">
+      <div class="ba-top">
+        <div><span class="tag">応援</span><h3>飛び交ったスタンプ<br><small style="font-size:13px;color:var(--muted);font-weight:700">（これまでのシャッフルクラス全体）</small></h3></div>
+      </div>
+      <div class="hl stamp" data-rain="18">
+        <div class="rain" aria-hidden="true"></div>
+        <p><span class="hl-s">クラスの部屋では</span><span class="hl-n"><b data-key="stamps_total" data-count="">–</b><small>個</small></span><span class="hl-s">のスタンプが飛び交いました</span></p>
+      </div>
+      <div class="pops" aria-hidden="true"><span>❤️</span><span>👍</span><span>🥰</span><span>🙌</span><span>👏</span><span>🎉</span><span>👑</span></div>
+      <p class="ba-note">「GO」や件数の報告に、仲間と運営からスタンプが届きます（自分の投稿へのものは除く）。</p>
+    </article>
+  </div>
+</section>
+
+<section id="weeks" aria-labelledby="wk-h">
+  <div class="sec-head rise">
+    <div class="kicker">WEEK BY WEEK</div>
+    <h2 id="wk-h">参加したその週から、<span class="mark">グラフがジャンプ</span></h2>
+    <p>入った時期がちがう人も、参加スタートの週をそろえてならべました。週ごとの平均です。</p>
+  </div>
+  <div class="charts">
+    <article class="card chart rise">
+      <h3>平日に投稿できた割合</h3>
+      <div class="sub">その週の平日5日のうち、Discordに投稿できた日の割合</div>
+      <div class="plot" id="plot-rate"></div>
+      <p class="chart-say" id="say-rate"></p>
+    </article>
+    <article class="card chart rise">
+      <h3>DMの数（1人・1週間あたり）</h3>
+      <div class="sub">全体共有リストに記録されたDMの数</div>
+      <div class="plot" id="plot-dm"></div>
+      <p class="chart-say" id="say-dm"></p>
+    </article>
+  </div>
+  <details class="tbl">
+    <summary>表で見る</summary>
+    <div class="tbl-wrap"><table><thead><tr><th>週</th><th>平日に投稿できた割合</th><th>DMの数（件／週）</th></tr></thead><tbody id="wk-tbody"></tbody></table></div>
+  </details>
+</section>
+
+<section id="stamps" aria-labelledby="st-h">
+  <div class="sec-head rise">
+    <div class="kicker">STAMPS</div>
+    <h2 id="st-h">クラスごとの<span class="mark">スタンプの数</span></h2>
+    <p>クラスの部屋の投稿についたスタンプ（自分の投稿へのものは除く）。「GO」や件数の報告に、仲間と運営からスタンプが届きます。</p>
+  </div>
+  <div class="stamp-hero rise" id="stamp-hero">
+    <div class="rain" id="rain" aria-hidden="true"></div>
+    <div class="big"><b data-key="stamps_total" data-count="">–</b><span>個</span></div>
+    <p>これまでのシャッフルクラス全体で送り合ったスタンプの数です。そのうち <b class="num" data-key="stamps_mate" data-count="">–</b>個 は、クラスの仲間どうしで送り合ったものです。</p>
+  </div>
+  <div id="cls-list"></div>
+</section>
+
+<section id="about" aria-labelledby="ab-h">
+  <div class="sec-head rise">
+    <div class="kicker">HOW IT WORKS</div>
+    <h2 id="ab-h">シャッフルクラスって、<span class="mark">こんなところ</span></h2>
+    <p>数人のメンバーとリーダーで1つのクラス。2か月くらい、同じゴールに向かっていっしょに走ります。</p>
+  </div>
+  <div class="about">
+    <div class="feats">
+      <div class="feat card rise"><div class="ic" aria-hidden="true">🎯</div><div><h3>決起会でゴールとルールを決める</h3><p>最初にZoomで顔合わせ。それぞれの目標をシェアして、クラスのゴールと、続けるためのルールをみんなで決めます。</p></div></div>
+      <div class="feat card rise"><div class="ic" aria-hidden="true">🔥</div><div><h3>はじめる前に「GO」</h3><p>作業を始めるときに「GO」と投稿。仲間のGOが目に入ると、自分も動きたくなります。</p></div></div>
+      <div class="feat card rise"><div class="ic" aria-hidden="true">🙌</div><div><h3>件数を報告して、スタンプで応援</h3><p>「42分の18件」のように進み具合を報告。動けない日は「できない」と次の予定を共有。スタンプとコメントで応援し合います。</p></div></div>
+      <div class="feat card rise"><div class="ic" aria-hidden="true">💻</div><div><h3>週1の作業会</h3><p>週に1回、Zoomでいっしょに作業する時間。わからないことは、その場で仲間に聞けます。</p></div></div>
+    </div>
+    <div class="dc rise" id="dc">
+      <div class="dc-top"><span class="hash">#</span>シャッフルクラス<small>やりとりのイメージ</small></div>
+      <div class="dc-body" id="dc-body"></div>
+    </div>
+  </div>
+</section>
+
+<section class="cta rise" aria-labelledby="cta-h">
+  <div class="eyebrow">NEXT CLASS</div>
+  <h2 id="cta-h">次のシャッフルクラスで、<br><em>いっしょに走りませんか？</em></h2>
+  <p>ひとりだと止まりそうな日も、仲間の「GO」とスタンプが背中を押してくれます。</p>
+</section>
+
+<section class="notes" aria-label="数え方">
+  <details>
+    <summary>数え方について</summary>
+    <ul>
+      <li>対象：これまでにシャッフルクラス（7〜8月の1期・9月からの2期）に参加したメンバー。リーダーを務めたメンバーも含みます。</li>
+      <li>参加前：はじめてクラスに入った日の前の30日（入会がその途中なら入会日から）。参加中：クラスにいた期間（開催中のクラスは <span id="asof-last"></span> まで）。</li>
+      <li>平日に動けた日：チアーズメイトのDiscordのどこかに1回でも投稿した平日（月〜金。祝日も平日として数えています。夜中0〜5時の投稿は前の日）。1か月の平日を約22日として日数に直しています。</li>
+      <li>DMの数：全体共有リストの記録（担当者と日付）。</li>
+      <li>クラスごとのスタンプ：クラスの部屋の投稿についたリアクションの合計（自分の投稿へのものは除く）。「仲間から」はクラスのメンバーとリーダー、「運営から」は運営のアカウントからのもの。</li>
+      <li>GOカレンダー：その日、クラスの部屋に投稿したメンバーの割合（色が濃いほど多くの人が投稿）。</li>
+    </ul>
+  </details>
+</section>
+<p class="foot" id="foot"></p>
+</main>
+
+<script>
+const DATA = {"asof":"2026-10-23","last":"2026-10-22","hero":{"rate_pre":0.318799337916985,"rate_dur":0.5218547959724431,"days_pre":6.933885599694424,"days_dur":11.350341812400638,"dm_pre":7.1250639386189265,"dm_dur":19.743955434133017,"up_share":0.7647058823529411,"dm_up_share":0.8235294117647058,"dm_total":3635,"stamps_total":2481,"stamps_mate":1187},"weeks":[{"w":-4,"rate":0.3412,"dm":8.71},{"w":-3,"rate":0.2588,"dm":9.18},{"w":-2,"rate":0.2824,"dm":5.12},{"w":-1,"rate":0.2824,"dm":5.12},{"w":0,"rate":0.5294,"dm":9.76},{"w":1,"rate":0.4625,"dm":13.38},{"w":2,"rate":0.4375,"dm":15.0},{"w":3,"rate":0.6133,"dm":16.0},{"w":4,"rate":0.4857,"dm":16.21},{"w":5,"rate":0.5571,"dm":24.64},{"w":6,"rate":0.5,"dm":27.07}],"classes":[{"key":"2A","term":"2期","label":"クラスA","start":"2026-09-01","end":"2026-10-22","ongoing":true,"stamps":385,"stamps_mate":195,"stamps_staff":190,"top":["❤️","👍","🥰","👏"],"posts":145,"cal":[["2026-09-01",0.0],["2026-09-02",0.667],["2026-09-03",0.333],["2026-09-04",0.667],["2026-09-07",0.333],["2026-09-08",0.0],["2026-09-09",0.667],["2026-09-10",0.667],["2026-09-11",0.333],["2026-09-14",0.667],["2026-09-15",0.667],["2026-09-16",0.667],["2026-09-17",0.667],["2026-09-18",0.667],["2026-09-21",0.667],["2026-09-22",0.667],["2026-09-23",0.667],["2026-09-24",0.667],["2026-09-25",0.5],["2026-09-28",0.5],["2026-09-29",0.5],["2026-09-30",0.75],["2026-10-01",0.25],["2026-10-02",0.5],["2026-10-05",0.25],["2026-10-06",0.5],["2026-10-07",0.5],["2026-10-08",0.5],["2026-10-09",0.5],["2026-10-12",0.6],["2026-10-13",0.6],["2026-10-14",0.6],["2026-10-15",0.4],["2026-10-16",0.4],["2026-10-19",0.4],["2026-10-20",0.6],["2026-10-21",0.6],["2026-10-22",0.6]]},{"key":"2B","term":"2期","label":"クラスB","start":"2026-09-01","end":"2026-10-22","ongoing":true,"stamps":605,"stamps_mate":315,"stamps_staff":290,"top":["👍","❤️","🥰","👑"],"posts":250,"cal":[["2026-09-01",0.0],["2026-09-02",0.25],["2026-09-03",0.0],["2026-09-04",0.5],["2026-09-07",0.0],["2026-09-08",0.25],["2026-09-09",0.0],["2026-09-10",0.0],["2026-09-11",0.0],["2026-09-14",0.75],["2026-09-15",0.25],["2026-09-16",0.25],["2026-09-17",0.5],["2026-09-18",0.0],["2026-09-21",0.75],["2026-09-22",1.0],["2026-09-23",1.0],["2026-09-24",1.0],["2026-09-25",1.0],["2026-09-28",1.0],["2026-09-29",1.0],["2026-09-30",1.0],["2026-10-01",1.0],["2026-10-02",0.333],["2026-10-05",0.667],["2026-10-06",0.667],["2026-10-07",0.667],["2026-10-08",0.667],["2026-10-09",0.667],["2026-10-12",1.0],["2026-10-13",1.0],["2026-10-14",0.667],["2026-10-15",1.0],["2026-10-16",0.0],["2026-10-19",0.333],["2026-10-20",1.0],["2026-10-21",1.0],["2026-10-22",0.333]]},{"key":"2C","term":"2期","label":"クラスC","start":"2026-09-01","end":"2026-10-22","ongoing":true,"stamps":302,"stamps_mate":99,"stamps_staff":203,"top":["👍","❤️","🥰","👏"],"posts":160,"cal":[["2026-09-01",0.333],["2026-09-02",0.667],["2026-09-03",0.667],["2026-09-04",0.0],["2026-09-07",0.333],["2026-09-08",0.667],["2026-09-09",0.0],["2026-09-10",0.0],["2026-09-11",0.0],["2026-09-14",0.0],["2026-09-15",0.0],["2026-09-16",1.0],["2026-09-17",1.0],["2026-09-18",0.333],["2026-09-21",0.0],["2026-09-22",1.0],["2026-09-23",0.667],["2026-09-24",0.667],["2026-09-25",0.333],["2026-09-28",0.667],["2026-09-29",1.0],["2026-09-30",0.333],["2026-10-01",1.0],["2026-10-02",0.333],["2026-10-05",0.333],["2026-10-06",0.667],["2026-10-07",0.667],["2026-10-08",0.667],["2026-10-09",0.667],["2026-10-12",1.0],["2026-10-13",1.0],["2026-10-14",1.0],["2026-10-15",0.333],["2026-10-16",1.0],["2026-10-19",0.667],["2026-10-20",0.667],["2026-10-21",1.0],["2026-10-22",1.0]]},{"key":"2D","term":"2期","label":"クラスD","start":"2026-09-01","end":"2026-10-22","ongoing":true,"stamps":188,"stamps_mate":47,"stamps_staff":141,"top":["👍","❤️","🥰","💯"],"posts":96,"cal":[["2026-09-01",0.333],["2026-09-02",0.333],["2026-09-03",0.333],["2026-09-04",0.667],["2026-09-07",0.667],["2026-09-08",0.333],["2026-09-09",0.333],["2026-09-10",0.667],["2026-09-11",0.667],["2026-09-14",0.333],["2026-09-15",0.333],["2026-09-16",1.0],["2026-09-17",0.333],["2026-09-18",0.333],["2026-09-21",0.0],["2026-09-22",0.0],["2026-09-23",1.0],["2026-09-24",0.333],["2026-09-25",0.0],["2026-09-28",0.333],["2026-09-29",0.333],["2026-09-30",0.667],["2026-10-01",0.333],["2026-10-02",0.333],["2026-10-05",0.333],["2026-10-06",0.0],["2026-10-07",0.333],["2026-10-08",0.0],["2026-10-09",0.333],["2026-10-12",0.333],["2026-10-13",0.0],["2026-10-14",0.667],["2026-10-15",0.0],["2026-10-16",0.0],["2026-10-19",0.333],["2026-10-20",0.0],["2026-10-21",0.333],["2026-10-22",0.0]]},{"key":"1C","term":"1期","label":"クラスC","start":"2026-07-10","end":"2026-08-31","ongoing":false,"stamps":259,"stamps_mate":118,"stamps_staff":141,"top":["👍","❤️","YUSUKE:1516294837543112824","🥰"],"posts":136,"cal":[["2026-07-10",0.75],["2026-07-13",0.25],["2026-07-14",0.5],["2026-07-15",0.5],["2026-07-16",0.5],["2026-07-17",0.5],["2026-07-20",0.75],["2026-07-21",0.5],["2026-07-22",0.5],["2026-07-23",0.25],["2026-07-24",0.5],["2026-07-27",0.25],["2026-07-28",0.5],["2026-07-29",0.5],["2026-07-30",0.25],["2026-07-31",0.5],["2026-08-03",0.25],["2026-08-04",0.5],["2026-08-05",0.5],["2026-08-06",0.5],["2026-08-07",0.25],["2026-08-10",0.5],["2026-08-11",0.25],["2026-08-12",0.25],["2026-08-13",0.5],["2026-08-14",0.0],["2026-08-17",0.5],["2026-08-18",0.5],["2026-08-19",0.5],["2026-08-20",0.5],["2026-08-21",0.5],["2026-08-24",0.25],["2026-08-25",0.5],["2026-08-26",0.5],["2026-08-27",0.75],["2026-08-28",0.25],["2026-08-31",0.5]]},{"key":"1D","term":"1期","label":"クラスD","start":"2026-07-10","end":"2026-08-31","ongoing":false,"stamps":742,"stamps_mate":413,"stamps_staff":329,"top":["👍","❤️","😆","YUSUKE:1516294837543112824"],"posts":362,"cal":[["2026-07-10",0.833],["2026-07-13",0.667],["2026-07-14",0.667],["2026-07-15",1.0],["2026-07-16",1.0],["2026-07-17",0.833],["2026-07-20",0.5],["2026-07-21",0.833],["2026-07-22",0.833],["2026-07-23",0.5],["2026-07-24",0.833],["2026-07-27",0.167],["2026-07-28",0.333],["2026-07-29",0.5],["2026-07-30",0.667],["2026-07-31",0.5],["2026-08-03",0.167],["2026-08-04",0.833],["2026-08-05",0.833],["2026-08-06",0.667],["2026-08-07",0.5],["2026-08-10",0.333],["2026-08-11",0.333],["2026-08-12",0.667],["2026-08-13",0.333],["2026-08-14",0.0],["2026-08-17",0.5],["2026-08-18",0.5],["2026-08-19",0.5],["2026-08-20",0.667],["2026-08-21",0.5],["2026-08-24",0.5],["2026-08-25",0.5],["2026-08-26",0.5],["2026-08-27",0.333],["2026-08-28",0.5],["2026-08-31",0.167]]}]};
+(function () {
+  "use strict";
+  const H = DATA.hero;
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const V = {
+    x_days: H.rate_dur / H.rate_pre, x_dm: H.dm_dur / H.dm_pre,
+    days_pre: H.days_pre, days_dur: H.days_dur, dm_pre: H.dm_pre, dm_dur: H.dm_dur,
+    up_share: H.up_share * 100, dm_up_share: H.dm_up_share * 100, dm_total: H.dm_total,
+    stamps_total: H.stamps_total, stamps_mate: H.stamps_mate,
+  };
+  const fmt = (v, dec) => dec ? v.toFixed(dec) : Math.round(v).toLocaleString("ja-JP");
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const jd = s => { const [y, m, d] = s.split("-").map(Number); return `${m}/${d}`; };
+  const jdl = s => { const [y, m, d] = s.split("-").map(Number); return `${y}年${m}月${d}日`; };
+
+  // ---------- 数字のカウントアップ ----------
+  function countUp(el) {
+    const key = el.dataset.key, dec = +(el.dataset.dec || 0), to = V[key];
+    if (to == null) return;
+    if (reduce) { el.textContent = fmt(to, dec); return; }
+    const t0 = performance.now(), dur = 1100;
+    (function step(t) {
+      const p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+      el.textContent = fmt(to * e, dec);
+      if (p < 1) requestAnimationFrame(step);
+    })(t0);
+  }
+  document.querySelectorAll("[data-count]").forEach(el => { el.textContent = fmt(V[el.dataset.key], +(el.dataset.dec || 0)); });
+
+  // ---------- KV：Zoomのイラスト ----------
+  const SKIN = ["#f6d6bf", "#efc4a2", "#f3cdb2", "#e8b48f", "#f7dcc8", "#edbf9c"];
+  const HAIR = { dark: "#2b2422", brown: "#5a3b2a", choco: "#3d2b24", ash: "#4a4550" };
+  function face(o) {
+    const s = o.skin, hc = o.hairColor;
+    let back = "", front = "", acc = "", arm = "", hands = "";
+    if (o.hair === "bob") back = `<path d="M60 56 C58 30 71 25 85 25 C99 25 112 30 110 56 L113 82 Q99 88 85 86 Q71 88 57 82 Z" fill="${hc}"/>`;
+    if (o.hair === "long") back = `<path d="M60 56 C58 30 71 25 85 25 C99 25 112 30 110 56 L116 108 Q85 116 54 108 Z" fill="${hc}"/>`;
+    if (o.hair === "pony") back = `<path d="M103 38 C124 40 128 70 117 92 C116 76 111 64 104 58 Z" fill="${hc}"/>`;
+    if (o.hair === "bun") back = `<circle cx="85" cy="25" r="10" fill="${hc}"/>`;
+    if (["bob", "long", "pony", "bun"].includes(o.hair))
+      front = `<path d="M63 56 C61 35 71 28 85 28 C99 28 109 35 107 56 C104 46 97 41 89 42 C80 43 70 46 63 56 Z" fill="${hc}"/>`;
+    if (o.hair === "short") front = `<path d="M63 53 C61 33 72 26 86 27 C100 28 109 35 107 53 C104 45 99 41 92 41 L78 41 C71 42 66 46 63 53 Z" fill="${hc}"/>`;
+    if (o.hair === "spiky") front = `<path d="M63 52 L64 36 L71 38 L74 27 L82 33 L88 24 L94 33 L101 28 L103 38 L107 40 L107 52 C102 44 94 41 85 41 C76 41 68 44 63 52 Z" fill="${hc}"/>`;
+    const eyes = o.eyes === "happy"
+      ? `<path d="M73 59 Q77 54 81 59 M89 59 Q93 54 97 59" stroke="#2a2430" stroke-width="2.2" fill="none" stroke-linecap="round"/>`
+      : `<g class="blink"><circle cx="77" cy="58" r="2.7" fill="#2a2430"/><circle cx="93" cy="58" r="2.7" fill="#2a2430"/></g>`;
+    const mouth = o.mouth === "open"
+      ? `<path d="M78 66 Q85 77 92 66 Z" fill="#8a3340"/><path d="M81 70 Q85 74 89 70" fill="#e98a8a"/>`
+      : `<path d="M79 67 Q85 73 91 67" stroke="#8a3340" stroke-width="2.2" fill="none" stroke-linecap="round"/>`;
+    if (o.glasses) acc += `<g fill="none" stroke="#2a2430" stroke-width="1.6"><circle cx="77" cy="58" r="6.2"/><circle cx="93" cy="58" r="6.2"/><path d="M83 58 h4"/></g>`;
+    if (o.phones) acc += `<path d="M60 60 C58 24 112 24 110 60" stroke="#1b2d5b" stroke-width="4.5" fill="none"/><rect x="55" y="52" width="9" height="15" rx="4" fill="#1b2d5b"/><rect x="106" y="52" width="9" height="15" rx="4" fill="#1b2d5b"/>`;
+    if (o.earring) acc += `<circle cx="64" cy="66" r="2" fill="#f5c542"/><circle cx="106" cy="66" r="2" fill="#f5c542"/>`;
+    if (o.wave) arm = `<g class="wave" style="transform-origin:${o.wave === "l" ? 50 : 120}px 104px"><path d="${o.wave === "l" ? "M52 106 C42 96 36 82 34 68" : "M118 106 C128 96 134 82 136 68"}" stroke="${o.shirt}" stroke-width="12" stroke-linecap="round" fill="none"/><circle cx="${o.wave === "l" ? 34 : 136}" cy="62" r="7.5" fill="${s}"/></g>`;
+    if (o.cheer) arm = `<path d="M52 106 C42 94 38 80 36 66 M118 106 C128 94 132 80 134 66" stroke="${o.shirt}" stroke-width="12" stroke-linecap="round" fill="none"/><circle cx="36" cy="60" r="7.5" fill="${s}"/><circle cx="134" cy="60" r="7.5" fill="${s}"/>`;
+    if (o.cup) hands = `<g transform="translate(0 -9)"><g class="steam" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" opacity=".85"><path d="M81 88 q-3 -4 0 -8"/><path d="M89 88 q-3 -4 0 -8" style="animation-delay:.8s"/></g><path d="M96 98 q8 0 8 6 q0 6 -8 6" stroke="#ffffff" stroke-width="2.4" fill="none"/><rect x="74" y="92" width="23" height="20" rx="4" fill="#ffffff" stroke="rgba(27,45,91,.18)" stroke-width="1"/><ellipse cx="85.5" cy="93.5" rx="10" ry="2.8" fill="#7fae4e"/><circle cx="73" cy="104" r="6.5" fill="${s}"/><circle cx="98" cy="106" r="6.5" fill="${s}"/></g>`;
+    if (o.laptop) hands = `<path d="M46 124 L56 102 L114 102 L124 124 Z" fill="#cfd8e6"/><path d="M56 102 L114 102 L111 108 L59 108 Z" fill="#b7c3d6"/><circle cx="85" cy="114" r="3" fill="#ffffff" opacity=".9"/>`;
+    return `${back}<path d="M40 126 C41 100 58 88 85 88 C112 88 129 100 130 126 Z" fill="${o.shirt}"/>
+      <path d="M77 86 Q85 94 93 86" fill="none" stroke="rgba(0,0,0,.12)" stroke-width="2"/>
+      <rect x="79" y="72" width="12" height="16" rx="5" fill="${s}"/>
+      <circle cx="64" cy="59" r="4.5" fill="${s}"/><circle cx="106" cy="59" r="4.5" fill="${s}"/>
+      <ellipse cx="85" cy="56" rx="21.5" ry="23.5" fill="${s}"/>
+      ${front}${eyes}<ellipse cx="71.5" cy="65" rx="4.2" ry="2.6" fill="#f08f8f" opacity=".45"/><ellipse cx="98.5" cy="65" rx="4.2" ry="2.6" fill="#f08f8f" opacity=".45"/>
+      ${mouth}${acc}${arm}${hands}`;
+  }
+  const PEOPLE = [
+    { bg: "#dcebfb", skin: SKIN[0], hair: "bob", hairColor: HAIR.choco, shirt: "#2f7fc6", cup: 1, tag: "🍵 おはよう〜" },
+    { bg: "#fff0c4", skin: SKIN[1], hair: "short", hairColor: HAIR.dark, shirt: "#1b2d5b", glasses: 1, wave: "r", mouth: "open", tag: "GO🔥" },
+    { bg: "#e2eed5", skin: SKIN[2], hair: "long", hairColor: HAIR.brown, shirt: "#f5c542", phones: 1, eyes: "happy", laptop: 1, tag: "18/42件" },
+    { bg: "#fde4e6", skin: SKIN[3], hair: "spiky", hairColor: HAIR.dark, shirt: "#4b7a2a", cheer: 1, mouth: "open", eyes: "happy", tag: "やった〜！" },
+    { bg: "#ebe5fb", skin: SKIN[4], hair: "bun", hairColor: HAIR.ash, shirt: "#7d6bc2", earring: 1, cup: 1, eyes: "happy", tag: "🇫🇷 3件" },
+    { bg: "#d8f1ee", skin: SKIN[5], hair: "pony", hairColor: HAIR.choco, shirt: "#e8775f", wave: "l", tag: "ナイス🙌" },
+  ];
+  const TW = 170, TH = 126, PAD = 14, GAP = 10, TOP = 44, W = PAD * 2 + TW * 3 + GAP * 2, HH = TOP + TH * 2 + GAP + 60;
+  function tiles() {
+    return PEOPLE.map((p, i) => {
+      const x = PAD + (i % 3) * (TW + GAP), y = TOP + Math.floor(i / 3) * (TH + GAP);
+      return `<g transform="translate(${x} ${y})">
+        <clipPath id="t${i}"><rect width="${TW}" height="${TH}" rx="12"/></clipPath>
+        <rect width="${TW}" height="${TH}" rx="12" fill="${p.bg}"/>
+        <g clip-path="url(#t${i})"><circle cx="${i % 2 ? 150 : 22}" cy="${i % 2 ? 24 : 104}" r="26" fill="#ffffff" opacity=".45"/><g class="bob" style="animation-delay:${-i * .55}s">${face(p)}</g></g>
+        <g transform="translate(8 ${TH - 26})"><rect width="${16 + p.tag.length * 10.5}" height="19" rx="9.5" fill="rgba(12,20,42,.62)"/>
+          <path d="M10 5.5 a2.4 2.4 0 0 1 4.8 0 v4 a2.4 2.4 0 0 1 -4.8 0 z M8.6 9.4 a3.8 3.8 0 0 0 7.6 0 M12.4 13.2 v2" fill="none" stroke="#ffffff" stroke-width="1.3" stroke-linecap="round"/>
+          <text x="20" y="13.6" fill="#ffffff" font-size="10.5" font-weight="700" font-family="Zen Kaku Gothic New, Hiragino Sans, sans-serif">${esc(p.tag)}</text></g>
+        <rect class="tile-ring" data-ring="${i}" x="1.5" y="1.5" width="${TW - 3}" height="${TH - 3}" rx="11"/>
+      </g>`;
+    }).join("");
+  }
+  function bubble(i, text, delay, w) {
+    const x = PAD + (i % 3) * (TW + GAP) + TW / 2, y = TOP + Math.floor(i / 3) * (TH + GAP) + 8;
+    return `<g class="bub" style="animation-delay:${delay}s"><g transform="translate(${x - w / 2} ${y - 30})">
+      <rect width="${w}" height="28" rx="14" fill="#ffffff"/><path d="M${w / 2 - 6} 27 L${w / 2} 35 L${w / 2 + 6} 27 Z" fill="#ffffff"/>
+      <text x="${w / 2}" y="18.5" text-anchor="middle" fill="#1b2d5b" font-size="13" font-weight="900" font-family="Zen Kaku Gothic New, Hiragino Sans, sans-serif">${esc(text)}</text></g></g>`;
+  }
+  const by = TOP + TH * 2 + GAP + 14;
+  document.getElementById("zoom").innerHTML = `<svg viewBox="0 0 ${W} ${HH}" role="img" aria-label="Zoomの画面で、6人のメンバーが手をふったり抹茶を飲んだりしながら楽しそうに作業しているイラスト">
+    <rect width="${W}" height="${HH}" rx="18" fill="#0f1a35"/>
+    <circle cx="22" cy="22" r="5" fill="#ff6b5e"/><circle cx="38" cy="22" r="5" fill="#f5c542"/><circle cx="54" cy="22" r="5" fill="#5bc06a"/>
+    <text x="${W / 2}" y="26.5" text-anchor="middle" fill="#c3d1ee" font-size="12.5" font-weight="700" font-family="Zen Kaku Gothic New, Hiragino Sans, sans-serif">シャッフルクラス｜作業会</text>
+    <g transform="translate(${W - 92} 12)"><rect width="78" height="20" rx="10" fill="rgba(255,255,255,.1)"/><circle cx="12" cy="10" r="4" fill="#5bc06a"/><text x="22" y="14.5" fill="#ffffff" font-size="11" font-weight="700" font-family="Barlow, sans-serif">LIVE 6人</text></g>
+    ${tiles()}
+    <g transform="translate(0 ${by})">
+      <rect x="${PAD}" width="${W - PAD * 2}" height="38" rx="19" fill="rgba(255,255,255,.07)"/>
+      <g transform="translate(${PAD + 22} 19)" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"><rect x="-4" y="-9" width="8" height="12" rx="4"/><path d="M-7 0 a7 7 0 0 0 14 0 M0 7 v3"/></g>
+      <g transform="translate(${PAD + 58} 19)" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linejoin="round"><rect x="-9" y="-6" width="13" height="12" rx="3"/><path d="M4 -2 L10 -6 V6 L4 2 Z"/></g>
+      <g transform="translate(${PAD + 96} 19)"><circle r="9" fill="none" stroke="#ffffff" stroke-width="1.8"/><circle cx="-3" cy="-2" r="1.3" fill="#ffffff"/><circle cx="3" cy="-2" r="1.3" fill="#ffffff"/><path d="M-4 2.5 Q0 6 4 2.5" stroke="#ffffff" stroke-width="1.6" fill="none" stroke-linecap="round"/></g>
+      <text x="${W / 2 + 10}" y="24" text-anchor="middle" fill="#c3d1ee" font-size="12" font-weight="700" font-family="Zen Kaku Gothic New, Hiragino Sans, sans-serif">❤️ 👍 🥰 🙌</text>
+      <g transform="translate(${W - PAD - 92} 6)"><rect width="80" height="26" rx="13" fill="#f5c542"/><text x="40" y="18" text-anchor="middle" fill="#1b2d5b" font-size="13.5" font-weight="900" font-family="Barlow, Zen Kaku Gothic New, sans-serif">GO! 🔥</text></g>
+    </g>
+    ${bubble(1, "GO！🔥", 0, 82)}${bubble(3, "10件送れた！", 3, 112)}${bubble(5, "ナイス〜🙌", 6, 100)}
+  </svg>`;
+  // 話している人の枠が順番に光る
+  let ring = 1;
+  const rings = [...document.querySelectorAll(".tile-ring")];
+  const lightRing = () => { rings.forEach(r => r.classList.toggle("on", +r.dataset.ring === ring)); ring = [3, 5, 0, 2, 4, 1][[1, 3, 5, 0, 2, 4].indexOf(ring)]; };
+  lightRing();
+  if (!reduce) setInterval(lightRing, 3000);
+  // スタンプがふわっと上がる
+  const fl = document.getElementById("floaters"), EM = ["❤️", "👍", "🥰", "🙌", "🔥", "🎉", "👏", "❤️", "👍"];
+  function spawn() {
+    if (document.hidden) return;
+    const s = document.createElement("span");
+    s.textContent = EM[Math.floor(Math.random() * EM.length)];
+    s.style.left = (8 + Math.random() * 84) + "%";
+    s.style.setProperty("--dx", (Math.random() * 40 - 20) + "px");
+    s.style.setProperty("--t", (2.4 + Math.random() * 1.4) + "s");
+    fl.appendChild(s);
+    s.addEventListener("animationend", () => s.remove());
+  }
+  if (!reduce) { for (let i = 0; i < 4; i++) setTimeout(spawn, i * 250); setInterval(spawn, 520); }
+
+  // ---------- 1. 参加前→参加中 ----------
+  document.querySelectorAll("[data-dots]").forEach(el => {
+    el.innerHTML = Array.from({ length: 22 }, () => "<i></i>").join("");
+    el.setAttribute("role", "img");
+    el.setAttribute("aria-label", `平日22日のうち約${Math.round(V[el.dataset.dots])}日`);
+  });
+  function playCard(card) {
+    card.querySelectorAll("[data-count]").forEach(countUp);
+    card.querySelectorAll("[data-dots]").forEach(el => {
+      const n = Math.round(V[el.dataset.dots]);
+      [...el.children].forEach((d, i) => { if (i < n) setTimeout(() => d.classList.add("on"), reduce ? 0 : 120 + i * 70); });
+    });
+    card.querySelectorAll("[data-bar]").forEach(el => { el.style.width = (100 * V[el.dataset.bar] / Math.max(V.dm_pre, V.dm_dur)) + "%"; });
+    card.querySelectorAll("[data-meter]").forEach(el => { el.style.width = V[el.dataset.meter] + "%"; });
+    card.querySelectorAll(".pops").forEach(el => {
+      if (reduce) { el.classList.add("on"); return; }
+      [...el.children].forEach((d, i) => { d.style.transitionDelay = (0.5 + i * 0.12) + "s"; });
+      el.classList.add("on");
+    });
+    card.querySelectorAll("[data-rain]").forEach(el => { if (!reduce) rain(el.querySelector(".rain"), +el.dataset.rain); });
+  }
+
+  // ---------- 2. 週ごとの折れ線 ----------
+  const WK = DATA.weeks;
+  const wlab = w => w < 0 ? `${-w}週前` : `${w + 1}週目`;
+  document.getElementById("wk-tbody").innerHTML = WK.map(w => `<tr><td>${wlab(w.w)}</td><td>${Math.round(w.rate * 100)}%</td><td>${w.dm.toFixed(1)}</td></tr>`).join("");
+  const pre = WK.filter(w => w.w < 0), dur = WK.filter(w => w.w >= 0);
+  const avg = (a, k) => a.reduce((s, x) => s + x[k], 0) / a.length;
+  const lo = (a, k) => Math.min(...a.map(x => x[k])), hi = (a, k) => Math.max(...a.map(x => x[k]));
+  document.getElementById("say-rate").innerHTML = `参加前は <b>${Math.round(lo(pre, "rate") * 100)}〜${Math.round(hi(pre, "rate") * 100)}%</b>。参加した週に <b>${Math.round(dur[0].rate * 100)}%</b> へジャンプして、そのあとも半分以上の平日に投稿が続いています。`;
+  document.getElementById("say-dm").innerHTML = `参加前は週 <b>${Math.floor(lo(pre, "dm"))}〜${Math.ceil(hi(pre, "dm"))}件</b>。週を追うごとに増えて、${wlab(dur[dur.length - 1].w)}は <b>${dur[dur.length - 1].dm.toFixed(1)}件</b>。`;
+  const charts = [
+    { el: document.getElementById("plot-rate"), key: "rate", max: 0.8, ticks: [0, .2, .4, .6, .8], tf: v => Math.round(v * 100) + "%", vf: v => Math.round(v * 100) + "%", name: "平日に投稿できた割合" },
+    { el: document.getElementById("plot-dm"), key: "dm", max: 30, ticks: [0, 10, 20, 30], tf: v => v, vf: v => v.toFixed(1) + "件", name: "DMの数" },
+  ];
+  function drawChart(c, animate) {
+    const el = c.el, Wd = Math.max(280, el.clientWidth), Ht = Wd < 420 ? 230 : 250;
+    const m = { l: 40, r: 18, t: 34, b: 30 }, iw = Wd - m.l - m.r, ih = Ht - m.t - m.b;
+    const n = WK.length, step = iw / (n - 1);
+    const X = i => m.l + i * step, Y = v => m.t + ih - (v / c.max) * ih;
+    const i0 = WK.findIndex(w => w.w === 0), split = (X(i0 - 1) + X(i0)) / 2;
+    const narrow = Wd < 460;
+    let s = `<svg width="${Wd}" height="${Ht}" viewBox="0 0 ${Wd} ${Ht}" role="img" aria-label="${c.name}の週ごとの推移。参加前は低く、参加してから上がっている">`;
+    s += `<rect class="band-pre" x="${m.l - step / 2}" y="${m.t - 24}" width="${split - m.l + step / 2}" height="${ih + 24}" rx="8"/>`;
+    s += `<rect class="band-dur" x="${split}" y="${m.t - 24}" width="${X(n - 1) + step / 2 - split}" height="${ih + 24}" rx="8"/>`;
+    s += `<text class="band-lab" x="${m.l - step / 2 + 8}" y="${m.t - 8}">参加前</text><text class="band-lab dur" x="${split + 8}" y="${m.t - 8}">参加中</text>`;
+    c.ticks.forEach(t => { s += `<line class="grid" x1="${m.l - step / 2}" x2="${X(n - 1) + step / 2}" y1="${Y(t)}" y2="${Y(t)}"/><text class="ax" x="${m.l - step / 2 - 6}" y="${Y(t) + 4}" text-anchor="end">${c.tf(t)}</text>`; });
+    WK.forEach((w, i) => {
+      const show = !narrow || w.w === -4 || w.w === 0 || i === n - 1 || w.w === 3;
+      if (show) s += `<text class="axj" x="${X(i)}" y="${Ht - 8}" text-anchor="middle">${wlab(w.w)}</text>`;
+    });
+    s += `<line class="startline" x1="${split}" x2="${split}" y1="${m.t - 24}" y2="${m.t + ih}"/>`;
+    const lw = narrow ? 70 : 82;
+    s += `<g class="startlab" transform="translate(${split - lw / 2} ${m.t - 2})"><rect width="${lw}" height="20" rx="10"/><text x="${lw / 2}" y="14" text-anchor="middle">参加スタート</text></g>`;
+    const pts = WK.map((w, i) => [X(i), Y(w[c.key])]);
+    const path = a => "M" + a.map(p => p.map(v => v.toFixed(1)).join(" ")).join(" L");
+    s += `<path class="ln pre" d="${path(pts.slice(0, i0))}"/><path class="ln dur" d="${path(pts.slice(i0 - 1))}"/>`;
+    pts.forEach((p, i) => { s += `<circle class="pt ${i < i0 ? "pre" : "dur"}" cx="${p[0]}" cy="${p[1]}" r="${i === n - 1 ? 5.5 : 4.5}"/>`; });
+    const last = pts[n - 1];
+    s += `<text class="endlab" x="${last[0] - 10}" y="${last[1] + (pts[n - 2][1] > last[1] ? -10 : 18)}" text-anchor="end">${c.vf(WK[n - 1][c.key])}</text>`;
+    s += `<line class="cross" x1="0" x2="0" y1="${m.t - 24}" y2="${m.t + ih}"/>`;
+    s += `<rect class="hit" x="${m.l - step / 2}" y="${m.t - 24}" width="${iw + step}" height="${ih + 24}"/></svg><div class="tip"></div>`;
+    el.innerHTML = s;
+    const svg = el.querySelector("svg"), tip = el.querySelector(".tip"), cross = el.querySelector(".cross"), hit = el.querySelector(".hit");
+    const move = ev => {
+      const r = svg.getBoundingClientRect(), x = ev.clientX - r.left;
+      const i = Math.max(0, Math.min(n - 1, Math.round((x - m.l) / step)));
+      cross.setAttribute("x1", X(i)); cross.setAttribute("x2", X(i)); cross.style.opacity = 1;
+      tip.innerHTML = `${wlab(WK[i].w)}${i < i0 ? "（参加前）" : ""}<br><b>${c.vf(WK[i][c.key])}</b>`;
+      tip.style.left = Math.max(60, Math.min(Wd - 60, X(i))) + "px"; tip.style.top = pts[i][1] + "px"; tip.classList.add("show");
+    };
+    const leave = () => { cross.style.opacity = 0; tip.classList.remove("show"); };
+    hit.addEventListener("pointermove", move); hit.addEventListener("pointerdown", move); hit.addEventListener("pointerleave", leave);
+    if (animate && !reduce) el.querySelectorAll(".ln").forEach((p, k) => {
+      const L = p.getTotalLength(); p.style.strokeDasharray = L; p.style.strokeDashoffset = L;
+      p.getBoundingClientRect(); p.style.transition = `stroke-dashoffset ${k ? 1.4 : .8}s ease ${k ? .7 : 0}s`; p.style.strokeDashoffset = 0;
+    });
+  }
+  charts.forEach(c => drawChart(c, false));
+  let rw = 0;
+  addEventListener("resize", () => { clearTimeout(rw); rw = setTimeout(() => charts.forEach(c => drawChart(c, false)), 150); });
+
+  // ---------- 3. クラスごと ----------
+  const emoji = e => {
+    if (!e.includes(":")) return esc(e);
+    const [nm, id] = e.split(":");
+    return `<img src="https://cdn.discordapp.com/emojis/${encodeURIComponent(id)}.webp?size=48" alt=":${esc(nm)}:" loading="lazy" onerror="this.parentNode.remove()">`;
+  };
+  const lv = v => v <= 0 ? "" : v <= 1 / 3 + 1e-9 ? "l1" : v <= 2 / 3 + 1e-9 ? "l2" : "l3";
+  function calendar(cal) {
+    const first = new Date(cal[0][0] + "T00:00:00"), mon = new Date(first); mon.setDate(first.getDate() - ((first.getDay() + 6) % 7));
+    const cells = [];
+    for (let k = 0; k < (first.getDay() + 6) % 7; k++) cells.push(`<i class="none"></i>`);
+    cal.forEach(([d, v]) => cells.push(`<i class="${lv(v)}" data-d="${d}" data-v="${v}"></i>`));
+    return `<div class="cal" role="img" aria-label="平日ごとの、部屋に投稿した人の割合">${cells.join("")}</div>`;
+  }
+  const groups = [["2期", "9月〜", true], ["1期", "7月〜8月", false]];
+  document.getElementById("cls-list").innerHTML = groups.map(([t, per, live]) => {
+    const cs = DATA.classes.filter(c => c.term === t);
+    return `<div class="term rise">${t}｜${per}${live ? `<span class="live">開催中</span>` : ""}</div><div class="cls-grid">` + cs.map(c => {
+      const mate = c.stamps_mate / c.stamps;
+      return `<article class="card cls rise">
+        <div class="cls-h"><h3>${esc(c.label)}</h3><span class="period">${jd(c.start)}〜${c.ongoing ? "" : jd(c.end)}</span></div>
+        <div class="cls-big"><b class="num" data-cls="${c.stamps}">${c.stamps.toLocaleString("ja-JP")}</b><span>個のスタンプ</span></div>
+        <div class="tops" aria-label="よく使われたスタンプ">${c.top.map(e => `<span>${emoji(e)}</span>`).join("")}</div>
+        <div><div class="stack" role="img" aria-label="仲間から${Math.round(mate * 100)}%、運営から${100 - Math.round(mate * 100)}%"><i style="width:${mate * 100}%"></i><i style="width:${(1 - mate) * 100}%"></i></div>
+        <div class="legend" style="margin-top:6px"><span><i style="background:var(--sky)"></i>仲間から <b>${Math.round(mate * 100)}%</b></span><span><i style="background:var(--gold)"></i>運営から <b>${100 - Math.round(mate * 100)}%</b></span></div></div>
+        <div><div class="cal-lab"><span>GOカレンダー（平日）</span><span class="scale">少<i style="background:var(--cal0)"></i><i style="background:var(--cal1)"></i><i style="background:var(--cal2)"></i><i style="background:var(--cal3)"></i>多</span></div>
+        <div style="margin-top:6px;position:relative" class="calbox">${calendar(c.cal)}<div class="tip"></div></div></div>
+        <div class="cls-foot">部屋への投稿 <b>${c.posts.toLocaleString("ja-JP")}</b>件</div>
+      </article>`;
+    }).join("") + `</div>`;
+  }).join("");
+  document.querySelectorAll(".calbox").forEach(box => {
+    const tip = box.querySelector(".tip");
+    box.addEventListener("pointerover", ev => {
+      const c = ev.target.closest("i[data-d]");
+      if (!c) { tip.classList.remove("show"); return; }
+      const v = +c.dataset.v, bx = box.getBoundingClientRect(), r = c.getBoundingClientRect();
+      tip.innerHTML = `${jd(c.dataset.d)}（${"日月火水木金土"[new Date(c.dataset.d + "T00:00:00").getDay()]}）<br><b>${Math.round(v * 100)}%</b> の人が投稿`;
+      tip.style.left = Math.max(60, Math.min(bx.width - 60, r.left - bx.left + r.width / 2)) + "px"; tip.style.top = (r.top - bx.top) + "px";
+      tip.classList.add("show");
+    });
+    box.addEventListener("pointerleave", () => tip.classList.remove("show"));
+  });
+
+  // ---------- 4. やりとりのイメージ ----------
+  const AV = [
+    { bg: "#dcebfb", skin: SKIN[0], hair: "bob", hairColor: HAIR.choco, shirt: "#2f7fc6" },
+    { bg: "#e2eed5", skin: SKIN[2], hair: "long", hairColor: HAIR.brown, shirt: "#f5c542", eyes: "happy" },
+    { bg: "#fde4e6", skin: SKIN[3], hair: "spiky", hairColor: HAIR.dark, shirt: "#4b7a2a" },
+    { bg: "#fff0c4", skin: SKIN[1], hair: "short", hairColor: HAIR.dark, shirt: "#1b2d5b", glasses: 1, mouth: "open" },
+  ];
+  const av = i => `<svg viewBox="30 14 110 110" aria-hidden="true"><rect x="0" y="0" width="170" height="130" fill="${AV[i].bg}"/>${face(AV[i])}</svg>`;
+  const MSG = [
+    { a: 0, who: "Aさん", t: "7:02", txt: "GO🔥", rx: [["👍", 3], ["❤️", 2, 1]] },
+    { a: 1, who: "Bさん", t: "7:15", txt: "おはようございます！ GO🔥 今日はフランスのカフェに送ります🇫🇷", rx: [["❤️", 4], ["🥰", 2]] },
+    { a: 0, who: "Aさん", t: "8:40", txt: "42分の24件！ 今日は6件送れました🙌", rx: [["👑", 3, 1], ["🥰", 2]] },
+    { a: 2, who: "Cさん", t: "21:10", txt: "今日は仕事で動けませんでした…明日の朝に10件やります！", rx: [["👍", 4], ["🙏", 2]] },
+    { a: 3, who: "リーダー", t: "21:32", txt: "みんなナイス！ 水曜の作業会でまた話しましょう〜🙌", lead: 1, rx: [["🥳", 3, 1], ["❤️", 3]] },
+  ];
+  document.getElementById("dc-body").innerHTML = MSG.map(m => `<div class="msg"><div class="av">${av(m.a)}</div><div>
+    <div class="who">${m.who}${m.lead ? `<span class="lead">リーダー</span>` : ""}<small>${m.t}</small></div>
+    <div class="txt">${esc(m.txt)}</div>
+    <div class="rx">${m.rx.map(([e, n, me]) => `<span class="${me ? "me" : ""}">${e} ${n}</span>`).join("")}</div></div></div>`).join("")
+    + "";
+  document.getElementById("dc").insertAdjacentHTML("beforeend", `<p class="dc-note">※実際の投稿ではなく、やりとりのイメージです。</p>`);
+
+  // ---------- 画面に入ったら ----------
+  function rain(box, count) {
+    const E = ["❤️", "👍", "🥰", "🙌", "👏", "🎉", "👑"];
+    for (let i = 0; i < count; i++) setTimeout(() => {
+      const s = document.createElement("span"); s.textContent = E[i % E.length];
+      s.style.left = (Math.random() * 96) + "%"; s.style.setProperty("--t", (2 + Math.random() * 1.6) + "s"); s.style.setProperty("--r", (Math.random() * 80 - 40) + "deg");
+      box.appendChild(s); s.addEventListener("animationend", () => s.remove());
+    }, i * 90);
+  }
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    const t = e.target; io.unobserve(t); t.classList.add("in");
+    if (t.closest(".ba")) playCard(t);
+    if (t.classList.contains("chart")) drawChart(charts.find(c => t.contains(c.el)), true);
+    if (t.id === "stamp-hero") { t.querySelectorAll("[data-count]").forEach(countUp); if (!reduce) rain(document.getElementById("rain"), 26); }
+    if (t.id === "dc") t.querySelectorAll(".msg").forEach((m, i) => setTimeout(() => m.classList.add("on"), reduce ? 0 : 300 + i * 650));
+  }), { threshold: .25 });
+  document.querySelectorAll(".rise").forEach(el => io.observe(el));
+  document.querySelectorAll(".kv [data-count]").forEach(countUp);
+
+  document.getElementById("asof-last").textContent = jdl(DATA.last);
+  document.getElementById("foot").textContent = `${jdl(DATA.last)}までのDiscordと全体共有リストの記録から集計｜チアーズメイト`;
+})();
+</script>
+</body>
+</html>
